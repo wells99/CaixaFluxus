@@ -1,0 +1,15 @@
+{
+  "name": "pdv-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema PDV Desktop (Local-First) com Electron, React, Prisma SQLite e Cloud API",
+  "scripts": {
+    "dev": "pnpm --filter desktop dev",
+    "build": "pnpm --filter desktop build",
+    "prisma:generate": "pnpm --filter desktop prisma:generate",
+    "test:step3": "node tests/verify-step3.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

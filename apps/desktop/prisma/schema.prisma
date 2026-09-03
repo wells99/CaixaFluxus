@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Produto {
+  id           String   @id @default(uuid())
+  codigoBarras String?  @unique
+  nome         String
+  precoVenta   Float
+  estoque      Int
+  updatedAt    DateTime @updatedAt
+}
+
+model Caixa {
+  id           String    @id @default(uuid())
+  saldoInicial Float
+  saldoFinal   Float?
+  status       String    // OPEN, CLOSED
+  openedAt     DateTime  @default(now())
+  closedAt     DateTime?
+  vendas       Venda[]
+}
+
+model Venda {
+  id         String      @id @default(uuid())
+  caixaId    String
+  caixa      Caixa       @relation(fields: [caixaId], references: [id])
+  valorTotal Float
+  metodoPgto String      // CASH, CARD, PIX
+  createdAt  DateTime    @default(now())
+  itens      ItemVenda[]
+}
+
+model ItemVenda {
+  id         String @id @default(uuid())
+  vendaId    String
+  venda      Venda  @relation(fields: [vendaId], references: [id])
+  produtoId  String
+  quantidade Int
+  precoUnit  Float
+}
+
+model SyncQueue {
+  id        String   @id @default(uuid())
+  entity    String   // VENDA, CAIXA, ESTOQUE
+  payload   String   // JSON stringified
+  status    String   // PENDING, SYNCED, FAILED
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+}
